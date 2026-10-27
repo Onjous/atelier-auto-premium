@@ -472,23 +472,23 @@ select.field-input option {
   transition-timing-function: var(--ease-expo);
   transition-delay: calc(var(--d, 0) * 1ms + var(--i, 0) * 90ms);
 }
-.js [data-reveal='up']:not(.is-revealed) {
+.js [data-reveal='up']:not([data-revealed]) {
   opacity: 0;
   transform: translate3d(0, 2rem, 0);
 }
-.js [data-reveal='fade']:not(.is-revealed) {
+.js [data-reveal='fade']:not([data-revealed]) {
   opacity: 0;
 }
-.js [data-reveal='clip']:not(.is-revealed) {
+.js [data-reveal='clip']:not([data-revealed]) {
   clip-path: inset(10% 6% 10% 6%);
 }
 .js [data-reveal='clip'] img {
   transition: transform 1.8s var(--ease-expo);
 }
-.js [data-reveal='clip']:not(.is-revealed) img {
+.js [data-reveal='clip']:not([data-revealed]) img {
   transform: scale(1.14);
 }
-.js [data-reveal='rule']:not(.is-revealed) {
+.js [data-reveal='rule']:not([data-revealed]) {
   transform: scaleX(0);
 }
 .js [data-reveal='rule'] {
@@ -509,7 +509,7 @@ select.field-input option {
   transition: transform 1.25s var(--ease-expo);
   transition-delay: calc(var(--d, 0) * 1ms + var(--l, 0) * 110ms);
 }
-.js .reveal-lines[data-reveal]:not(.is-revealed) .line > span {
+.js .reveal-lines[data-reveal]:not([data-revealed]) .line > span {
   transform: translate3d(0, 108%, 0);
 }
 
@@ -536,7 +536,7 @@ select.field-input option {
     animation: sweep 1.5s var(--ease-quint);
   }
 }
-.light-sweep.is-revealed::after,
+.light-sweep[data-revealed]::after,
 .light-sweep[data-sweep='auto']::after {
   animation: sweep 2.2s var(--ease-quint) 0.6s;
 }

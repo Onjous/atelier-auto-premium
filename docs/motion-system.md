@@ -23,7 +23,7 @@ Classes in `globals.css`: `hero-image` (slow scale-in), `hero-veil` (black veil 
 ```
 
 ### 2. Scroll reveals — `data-reveal` + one observer
-`RevealObserver` (mounted once in the root layout) adds `is-revealed` to any `[data-reveal]` element entering the viewport, and re-scans on navigation and DOM changes.
+`RevealObserver` (mounted once in the root layout) sets a `data-revealed` attribute on any `[data-reveal]` element entering the viewport, and re-scans on navigation and DOM changes. It is an attribute, not a class, because React rewrites `className` on re-render and would erase an imperatively added class (which once left the protection diagram blank).
 
 | Value | Effect |
 |---|---|
@@ -57,7 +57,7 @@ Pointer, touch and keyboard driven; a one-time "breathing" hint the first time i
 
 ## Rules
 
-- One system per element: no element is animated by both GSAP and Motion or CSS.
+- One system per element: no element is animated by both GSAP and Motion or CSS. In client components, put `data-reveal` on a wrapper and state-driven classes on an inner element.
 - Animate `transform`, `opacity` and `clip-path` only; no animated blur or large filtered surfaces.
 - No scroll hijacking, no smooth-scroll library, no autoplaying carousels.
 - Hover effects are progressive; everything works without hover on touch devices.

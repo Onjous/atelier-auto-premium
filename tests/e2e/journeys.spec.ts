@@ -28,6 +28,33 @@ test.describe('home', () => {
     await expect(slider).toHaveAttribute('aria-valuenow', '98');
   });
 
+  test('protection cross-section stays visible through every layer selection', async ({ page }) => {
+    await page.goto('/');
+    const list = page.getByRole('list', { name: 'Paint system layers' });
+    await list.scrollIntoViewIfNeeded();
+    const figure = page.locator('div').filter({ has: list }).last();
+    const bands = figure.locator('[data-reveal="up"]');
+    await expect(bands).toHaveCount(6);
+    // Regression: re-renders used to strip the reveal marker and hide bands permanently.
+    const visibility = () =>
+      bands.evaluateAll((els) =>
+        els.map((el) => {
+          // Effective opacity of the band: product down the element chain.
+          let opacity = 1;
+          for (let node: Element | null = el; node; node = node.firstElementChild) opacity *= +getComputedStyle(node).opacity;
+          return Math.round(opacity * 100) / 100;
+        }),
+      );
+
+    const names = ['Paint protection film', 'Ceramic coating', 'Clear coat', 'Base coat', 'Primer', 'Panel'];
+    for (const name of [...names, ...names, names[0]!]) await list.getByRole('button', { name: new RegExp(name) }).click();
+    await expect.poll(visibility, { timeout: 4000 }).toEqual([1, 0.45, 0.45, 0.45, 0.45, 0.45]);
+
+    await list.getByRole('button', { name: /Panel/ }).click();
+    await expect.poll(visibility, { timeout: 4000 }).toEqual([0.45, 0.45, 0.45, 0.45, 0.45, 1]);
+    await expect(figure.getByRole('button', { name: /Panel/ })).toHaveAttribute('aria-pressed', 'true');
+  });
+
   test('FAQ accordion expands and collapses', async ({ page }) => {
     await page.goto('/faq');
     const q = page.getByRole('button', { name: /Do I need a consultation/ });

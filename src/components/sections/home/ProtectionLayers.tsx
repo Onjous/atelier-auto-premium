@@ -73,12 +73,18 @@ export function ProtectionLayers() {
 
       <div className="mt-8 flex flex-col gap-[3px]" aria-hidden>
         {layers.map((l, i) => (
-          <div
-            key={l.id}
-            data-reveal="up"
-            style={stagger(i)}
-            className={cn('w-full transition-[opacity,outline-color] duration-500', l.band, selected === l.id ? 'opacity-100 outline outline-1 outline-offset-2 outline-champagne' : 'opacity-45')}
-          />
+          // The wrapper owns the scroll reveal; the band owns the selection state.
+          // Keeping them on separate elements stops the reveal transition (delay,
+          // duration) from hijacking selection changes.
+          <div key={l.id} data-reveal="up" style={stagger(i)}>
+            <div
+              className={cn(
+                'w-full transition-[opacity,outline-color] duration-500',
+                l.band,
+                selected === l.id ? 'opacity-100 outline outline-1 outline-offset-2 outline-champagne' : 'opacity-45',
+              )}
+            />
+          </div>
         ))}
       </div>
 
